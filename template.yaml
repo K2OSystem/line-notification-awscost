@@ -1,0 +1,63 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  sam-template
+
+  Sample SAM Template for sam-template
+
+Globals:
+  Function:
+    Timeout: 5
+    Runtime: python3.8
+    Environment:
+      Variables:
+        ENV: !Ref Env
+        ENDPOINT: !FindInMap [ EnvMap, !Ref Env, Endpoint ]
+        LINE_POST_URL: !Ref LinePostUrl
+        LINE_TOKEN: !Ref LineToken
+
+Parameters:
+  Env:
+    Type: String
+    AllowedValues:
+      - prod
+      - stg
+      - dev
+      - local
+    Default: dev
+  LinePostUrl:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: /sample/notification/line/url
+  LineToken:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: /sample/notification/line/token
+
+Mappings:
+  EnvMap:
+    prod:
+      Endpoint: ''
+    stg:
+      Endpoint: ''
+    dev:
+      Endpoint: ''
+    local:
+      Endpoint: 'http://host.docker.internal:4566'
+
+
+Resources:
+
+  lineNotificationAwscostFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: line-notification-awscost/
+      Handler: app.lambda_handler
+      Runtime: python3.8
+      Policies:
+        - CloudWatchReadOnlyAccess
+
+
+Outputs:
+  lineNotificationAwscostFunction:
+    Description: "Lambda Function ARN"
+    Value: !GetAtt lineNotificationAwscostFunction.Arn
+

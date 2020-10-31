@@ -1,0 +1,16 @@
+version = 0.1
+
+[default.build.parameters]
+profile = "default"
+debug = true
+skip_pull_image = false
+use_container = true
+
+[default.deploy.parameters]
+stack_name = "line-notification-awscost"
+s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-12sy8inujwlb2"
+s3_prefix = "line-notification-awscost"
+region = "ap-northeast-1"
+profile = "default"
+confirm_changeset = false
+capabilities = "CAPABILITY_IAM"
